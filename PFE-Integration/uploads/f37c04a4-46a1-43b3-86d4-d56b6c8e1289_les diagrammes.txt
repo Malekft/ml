@@ -1,0 +1,508 @@
+1)classe
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Arial","fontSize":"16px"}}}%%
+classDiagram
+direction LR
+
+    class Utilisateur {
+        +Long id
+        +String prenom
+        +String nom
+        +String email
+        +String motDePasseHash
+        +String telephone
+        +String avatar
+        +Role role
+        +LocalDateTime dateCreation
+        +LocalDateTime dateModification
+        +seConnecter()
+        +seDeconnecter()
+        +genererAvatar(String identifiant)
+    }
+
+    class Employe {
+        +String matricule
+        +String poste
+        +LocalDate dateEmbauche
+        +String bureau
+        +List~String~ competences
+        +soumettreDemande(d: Demande)
+        +consulterDemandes()
+        +televerserDocument(d: Document)
+    }
+
+    class Administrateur {
+        +String fonction
+    }
+
+    class Demande {
+        +Long id
+        +StatutDemande statut
+        +LocalDateTime dateCreation
+        +LocalDateTime dateTraitement
+        +String motifRefus
+        +String motif
+    }
+
+    class DemandeConge {
+        +LocalDate dateDebut
+        +LocalDate dateFin
+        +Integer dureeJours
+        +calculerDuree()
+    }
+
+    class TicketSupport {
+        +String titre
+        +String description
+        +String categorie
+        +Priorite priorite
+        +LocalDateTime echeanceSLA
+        +escaladerProbleme()
+    }
+
+    class DemandeHeuresSupplementaires {
+        +LocalDate dateTravail
+        +Integer nbHeures
+    }
+
+    class TypeConge {
+        +Long id
+        +String nom
+        +String categorie
+        +Boolean estPaye
+        +Integer joursMax
+        +Boolean justificatifObligatoire
+        +Integer delaiDemandeJours
+        +Integer delaiJustificationHeures
+    }
+
+    class SousTypeConge {
+        +Long id
+        +String nom
+        +Integer joursMax
+    }
+
+    class SoldeConge {
+        +Long id
+        +Integer joursAccumules
+        +Integer joursRestants
+        +Integer annee
+        +Integer heuresSortie
+        +mettreAJourSolde(int joursPris)
+        +ajouterHeuresSortie(int heures)
+    }
+
+    class Absence {
+        +Long id
+        +LocalDateTime dateDebut
+        +LocalDateTime dateFin
+        +String type
+        +Boolean justifiee
+        +LocalDateTime dateLimiteJustification
+        +String statut
+        +String urlJustificatif
+        +LocalDateTime dateJustification
+        +Boolean rappelEnvoye
+    }
+
+    class AutorisationSortie {
+        +Long id
+        +Integer heures
+        +LocalDate dateAutorisation
+        +LocalDateTime dateSaisie
+    }
+
+    class Document {
+        +Long id
+        +String nomFichier
+        +String urlFichier
+        +TypeDocument type
+        +LocalDateTime dateTelechargement
+        +Boolean valide
+    }
+
+    class Message {
+        +Long id
+        +String contenu
+        +String urlFichier
+        +String nomFichier
+        +Boolean estLu
+        +LocalDateTime horodatage
+        +Utilisateur expediteur
+        +Utilisateur destinataire
+    }
+
+    class Annonce {
+        +Long id
+        +String titre
+        +String contenu
+        +CategorieAnnonce categorie
+        +StatutAnnonce statut
+        +LocalDateTime datePlanifiee
+        +LocalDateTime dateCreation
+        +List~Plateforme~ plateformes
+    }
+
+    class CommentaireAnnonce {
+        +Long id
+        +String contenu
+        +String nomFichier
+        +String urlFichier
+        +LocalDateTime dateCreation
+    }
+
+    class Notification {
+        +Long id
+        +String message
+        +TypeNotification type
+        +Boolean estLu
+        +LocalDateTime dateCreation
+        +marquerCommeLu()
+    }
+
+    class JournalActivite {
+        +Long id
+        +String action
+        +String type
+        +LocalDateTime dateCreation
+    }
+
+    class Role {
+        ADMIN
+        EMPLOYE
+    }
+
+    class StatutDemande {
+        EN_ATTENTE
+        IN_PROGRESS
+        RESOLU
+        FERME
+        APPROUVEE
+        REFUSEE
+        ANNULEE
+    }
+
+    class Priorite {
+        BASSE
+        MOYENNE
+        HAUTE
+        URGENTE
+    }
+
+    class TypeDocument {
+        FICHE_PAIE
+        CONTRAT_TRAVAIL
+        AUTRE
+    }
+
+    class TypeNotification {
+        INTERNE
+        EMAIL
+        SLA
+        SYSTEME
+    }
+
+    class CategorieAnnonce {
+        INTERNE
+        EXTERNE
+    }
+
+    class StatutAnnonce {
+        PUBLIE
+        PLANIFIE
+    }
+
+    class Plateforme {
+        INTERNE
+        LINKEDIN
+        FACEBOOK
+    }
+
+    <<enumeration>> Role
+    <<enumeration>> StatutDemande
+    <<enumeration>> Priorite
+    <<enumeration>> TypeDocument
+    <<enumeration>> TypeNotification
+    <<enumeration>> CategorieAnnonce
+    <<enumeration>> StatutAnnonce
+    <<enumeration>> Plateforme
+
+    %% Héritage
+    Utilisateur <|-- Employe
+    Utilisateur <|-- Administrateur
+    Demande <|-- DemandeConge
+    Demande <|-- TicketSupport
+    Demande <|-- DemandeHeuresSupplementaires
+
+    %% Relations - Employé
+    Employe "1" --> "0..*" Demande : cree
+    Employe "1" --> "1" SoldeConge : possede
+    Employe "1" --> "0..*" Absence : a
+    Employe "1" --> "0..*" Document : televerse
+    Employe "1" --> "0..*" AutorisationSortie : beneficie
+    Employe "0..1" <-- "0..*" Employe : manager
+
+    %% Relations - Demande
+    Administrateur "0..1" <-- "0..*" Demande : traitePar
+    Demande "1" --> "0..*" Document : piecesJointes
+    Demande "1" --> "0..*" Notification : declenche
+
+    %% Relations - Congé
+    TypeConge "1" --> "0..*" DemandeConge : typeConge
+    TypeConge "1" --> "0..*" SousTypeConge : contient
+    SousTypeConge "0..1" --> "0..*" DemandeConge : sousTypeConge
+
+    %% Relations - Utilisateur
+    Utilisateur "1" --> "0..*" Notification : recoit
+    Utilisateur "1" --> "0..*" JournalActivite : effectue
+
+    %% Relations - Messages
+    Utilisateur "1" -- "0..*" Message : expediteur
+    Utilisateur "1" -- "0..*" Message : destinataire
+
+    %% Relations - Annonces
+    Utilisateur "1" --> "0..*" Annonce : publie
+    Annonce "1" --> "0..*" CommentaireAnnonce : contient
+    Utilisateur "1" --> "0..*" CommentaireAnnonce : redige
+    CommentaireAnnonce "0..1" --> "0..*" CommentaireAnnonce : reponses
+    Annonce "0..*" --> "0..*" Utilisateur : aimePar
+    CommentaireAnnonce "0..*" --> "0..*" Utilisateur : aimePar
+```
+2)sequence congé :
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '14px'}}}%%
+sequenceDiagram
+    autonumber
+    actor Employe as Employé
+    participant App as Application Angular
+    participant API as API Spring Boot
+    participant DB as Base de données (SQL)
+    participant Notif as NotificationService
+    participant Email as EmailService
+    actor Admin as Administrateur
+
+    Note over Employe, Admin: Processus de Demande de Congé
+
+    %% ========================
+    %% CREATION DEMANDE
+    %% ========================
+    Employe->>App: Soumettre formulaire de congé
+    App->>API: POST /demandes
+    
+    rect rgb(240, 240, 240)
+        Note right of API: Validation métier (DemandeService)
+        API->>DB: Vérifier TypeConge & SoldeConge
+        DB-->>API: Données solde
+        API->>API: Vérifier règles (Délai, Quota)
+    end
+
+    alt Règles non respectées
+        API-->>App: 400 Bad Request (Message d'erreur)
+        App-->>Employe: Afficher l'erreur
+    else Validation réussie
+        API->>DB: INSERT Demande (EN_ATTENTE)
+        API->>DB: INSERT DemandeConge
+        DB-->>API: idDemande
+        
+        %% Notification Admin
+        API->>Notif: scheduleDelayedAdminNotification(adminId)
+        Note right of Notif: Attente de 60s (TaskScheduler)
+        
+        API-->>App: 200 OK (Demande créée)
+        App-->>Employe: Confirmation visuelle
+        
+        Note over Notif, Email: Après 60 secondes...
+        Notif->>DB: INSERT Notification (INTERNE)
+        Notif->>Email: sendEmailForNotification()
+        Email-->>Admin: ✉️ Notification Email
+    end
+
+    %% ========================
+    %% TRAITEMENT ADMIN
+    %% ========================
+    Admin->>App: Consulter le tableau de bord
+    App->>API: GET /demandes
+    API->>DB: SELECT * FROM demandes
+    DB-->>API: Liste des demandes
+    API-->>App: Affichage des demandes
+
+    Admin->>App: Décider (Approuver / Refuser)
+
+    alt Approbation
+        App->>API: PUT /demandes/{id}/approve
+        API->>DB: UPDATE Demande (APPROUVEE)
+        API->>DB: UPDATE SoldeConge (Déduction jours)
+        
+        API->>Notif: createNotification(employeId)
+        Notif->>DB: INSERT Notification
+        Notif->>Email: build & sendEmail()
+        Email-->>Employe: ✉️ Email "Demande Approuvée"
+        API-->>App: Succès
+    else Refus
+        App->>API: PUT /demandes/{id}/reject
+        API->>DB: UPDATE Demande (REFUSEE)
+        
+        API->>Notif: createNotification(employeId)
+        Notif->>DB: INSERT Notification
+        Notif->>Email: build & sendEmail()
+        Email-->>Employe: ✉️ Email "Demande Refusée"
+        API-->>App: Succès
+    end
+
+
+3)sequence presence en temps reel :
+
+sequenceDiagram
+    autonumber
+    participant E as Employé
+    participant App as Application Angular
+    participant WS as Serveur WebSocket (Spring)
+    participant DB as Base de données
+    participant A as Administrateur
+
+    Note over E, A: Synchronisation de la présence en temps réel
+
+    %% Connexion
+    E->>App: Ouverture de l'application
+    App->>WS: Connexion (Négociation + Token JWT)
+    WS->>DB: MISE À JOUR : utilisateur.est_en_ligne = VRAI
+    
+    WS-->>App: Abonnement au canal /topic/presence
+    WS-->>A: Diffusion : "L'employé X est en ligne"
+    
+    Note right of A: L'indicateur de présence passe au vert instantanément
+    
+    %% Déconnexion
+    E->>App: Fermeture du navigateur ou Déconnexion
+    App->>WS: Demande de déconnexion
+    WS->>DB: MISE À JOUR : utilisateur.est_en_ligne = FAUX
+    WS-->>A: Diffusion : "L'employé X est hors ligne"
+    
+    Note right of A: L'indicateur de présence passe au gris
+
+1. La Phase de Connexion (L'ouverture de l'app)
+Connexion (Handshake + JWT) : Dès que l'employé ouvre l'application Angular, le PresenceService demande au serveur Spring Boot d'ouvrir un "tunnel" de communication appelé WebSocket. On envoie le jeton JWT pour prouver qui est l'utilisateur.
+UPDATE Database : Le serveur reçoit la connexion, identifie l'utilisateur, et va tout de suite mettre à jour sa fiche dans la base de données (est_en_ligne = true).
+Subscribe & Broadcast :
+L'application de l'employé s'abonne (Subscribe) à un canal pour recevoir des nouvelles.
+Le serveur envoie un message flash (Broadcast) à tous les autres utilisateurs (notamment l'Administrateur) pour dire : "Hé, l'employé X vient de se connecter !".
+2. L'Effet Visuel (Le Temps Réel)
+Le point vert : L'écran de l'administrateur reçoit ce message via le tunnel WebSocket et met à jour l'interface instantanément. C'est ce qui donne l'aspect "Live" à ta plateforme HR.
+3. La Phase de Déconnexion (La fermeture de l'app)
+Disconnect : Quand l'employé ferme l'onglet de son navigateur ou clique sur "Déconnexion", le tunnel se brise.
+UPDATE Database : Le serveur détecte la coupure, et remet le statut à false en base de données.
+Broadcast : Le serveur prévient tout le monde : "L'employé X est parti". Le point vert devient gris sur le tableau de bord de l'admin.
+Pourquoi c'est important pour ton PFE ?
+Technologie STOMP/WebSocket : Cela montre que tu ne fais pas que des requêtes HTTP simples (Request/Response), mais que tu maîtrises la communication bidirectionnelle.
+Optimisation : Cela évite que l'administrateur ne doive cliquer sur "Actualiser" toutes les 5 minutes pour voir qui est là.
+Expérience Utilisateur (UX) : Ton application ressemble à un outil moderne comme Slack ou Teams.
+
+4)cas d utilisation :
+
+%%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '13px'}}}%%
+flowchart LR
+
+  %% Acteurs
+  E[Employé]
+  A[Administrateur / RH]
+  S[Système / API]
+
+  subgraph Application_RH [Portail Intégré HR Platform]
+    %% Cas d'utilisation Employé
+    UC1((S'authentifier))
+    UC2((Gérer son profil))
+    UC4((Demander des heures supplémentaires))
+    UC5((Soumettre demande de congé))
+    UC6((Déposer un justificatif))
+    UC7((Créer ticket support))
+    UC8((Suivre l'état des demandes))
+    UC9((Utiliser la messagerie interne))
+
+    %% Cas d'utilisation Admin
+    UA1((Gérer l'annuaire employés))
+    UA2((Valider les demandes))
+    UA5((Consulter Analytics & BI))
+    UA7((Publier annonces & Social Media))
+    UA10((Prédire l'absentéisme))
+    
+    %% Services Système
+    US1((Envoyer Notifications & Emails))
+    US2((Mettre à jour les soldes))
+    US3((Gérer les alertes SLA))
+    US5((Publication Sociale Automatisée))
+  end
+
+  %% Relations Employé
+  E --> UC1
+  E --> UC2
+  E --> UC4
+  E --> UC5
+  E --> UC7
+  E --> UC8
+  E --> UC9
+
+  %% Relations Admin
+  A --> UC1
+  A --> UA1
+  A --> UA2
+  A --> UA5
+  A --> UA7
+  A --> UA10
+  A --> UC9
+
+  %% Interactions Système (Processus automatiques)
+  UC5 -. "<<include>>" .-> US1
+  UA2 -. "<<include>>" .-> US2
+  UA2 -. "<<include>>" .-> US1
+  UC7 -. "<<include>>" .-> US3
+  UA7 -. "<<include>>" .-> US5
+  
+  %% Héritage fonctionnel
+  UC5 -. "<<extend>>" .-> UC6
+
+  %% Style
+  style Application_RH fill:#f9f9f9,stroke:#333,stroke-width:2px
+  style S fill:#fff,stroke:#333,stroke-dasharray: 5 5
+5) etat -transtition congé :
+stateDiagram-v2
+    [*] --> EN_ATTENTE : Employé soumet la demande
+    
+    state EN_ATTENTE {
+        [*] --> NotificationAdmin : Envoi Email/SLA
+    }
+
+    EN_ATTENTE --> APPROUVEE : Admin valide
+    EN_ATTENTE --> REFUSEE : Admin refuse (avec motif)
+    EN_ATTENTE --> ANNULEE : Employé retire sa demande
+
+    state APPROUVEE {
+        [*] --> MiseAJourSolde : Déduction automatique
+        MiseAJourSolde --> NotifierEmploye
+    }
+
+    state REFUSEE {
+        [*] --> NotifierEmployeRefus
+    }
+
+    APPROUVEE --> [*]
+    REFUSEE --> [*]
+    ANNULEE --> [*]
+6)etat -transition ticket
+stateDiagram-v2
+    [*] --> EN_ATTENTE : Ticket créé
+    EN_ATTENTE --> IN_PROGRESS : Admin commence le traitement
+    IN_PROGRESS --> RESOLU : Solution apportée
+    IN_PROGRESS --> FERME : Ticket clos sans suite
+    RESOLU --> FERME : Confirmation de clôture
+    FERME --> [*]
+7)etat -transition heure supplimentaire
+stateDiagram
+  direction TB
+  state APPROUVEE {
+    direction TB
+    [*] --> AjoutCompteurHeures
+[*]    AjoutCompteurHeures
+  }
+  [*] --> EN_ATTENTE:Déclaration des heures
+  EN_ATTENTE --> APPROUVEE:Validation Manager
+  EN_ATTENTE --> REFUSEE:Refus (motif nécessaire)
+  APPROUVEE --> [*]
+  REFUSEE --> [*]

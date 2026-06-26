@@ -1,0 +1,4 @@
+modiifier les nombres de reason for  absence voici tous les reason juste changer le nombre dans le dataset de congés annuel ,congés expectionnel (deces,mariage,accompaniment leave,congé maternité,congé paternité,visite dans un cabinet avocat , absence injustifier ,congé maladie (ordinaire 5 jours au maximum  ,longue duree 7 jours au plus au minmumum
+et modifier le transportation expense parce que c est en tunisie et mettre en dinar aussi la meme chose distance from residence to work 
+et changer les valeurs de work load average /day parce que dans  le startup tous les employers travailler presque 8 h  temps plein
+et pour le education on a 3 type gradute from lycee et licence et master 
