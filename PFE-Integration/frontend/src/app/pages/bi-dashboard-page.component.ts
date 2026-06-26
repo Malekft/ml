@@ -49,28 +49,26 @@ Chart.register(...registerables);
       </article>
     </section>
 
-    <!-- Charts Row -->
-    <div class="grid-2" style="margin-bottom: 24px;">
-      <section class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h3 style="font-size:16px;font-weight:700;color:var(--text-main);margin:0;">Répartition des Congés par Sous-type</h3>
-          <a style="color:var(--color-primary);font-size:13px;text-decoration:none;cursor:pointer;font-weight:500;">Détails complets</a>
+    <!-- PowerBI Dashboard Embed -->
+    <div style="margin-bottom: 24px;">
+      <section class="card" style="padding: 0; overflow: hidden; border-radius: var(--radius-md);">
+        <div style="padding: 20px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color);">
+          <h3 style="font-size:16px;font-weight:700;color:var(--text-main);margin:0;">Dashboard PowerBI - HR Analytics</h3>
+          <a href="#" style="color:var(--color-primary);font-size:13px;text-decoration:none;font-weight:500;">Ouvrir dans PowerBI</a>
         </div>
-        <div class="chart-container" style="min-height:280px;">
-          <canvas #leavesDistributionChart></canvas>
-        </div>
-      </section>
-
-      <section class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h3 style="font-size:16px;font-weight:700;color:var(--text-main);margin:0;">Répartition par Type de Projet</h3>
-          <a style="color:var(--color-primary);font-size:13px;text-decoration:none;cursor:pointer;font-weight:500;">Voir détails</a>
-        </div>
-        <div class="chart-container" style="min-height:280px;">
-          <canvas #projectTypeChart></canvas>
+        <div class="chart-container" style="min-height: 600px; width: 100%; background: #f9fafb; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;">
+          <!-- 
+            This is a placeholder for the datad.pbix PowerBI report.
+            To make this live, replace this div with the actual PowerBI iframe embed code:
+            <iframe title="datad" width="100%" height="600" src="YOUR_POWERBI_EMBED_URL" frameborder="0" allowFullScreen="true"></iframe>
+          -->
+          <i-lucide name="trending-up" [size]="48" color="#9ca3af"></i-lucide>
+          <p style="color: #6b7280; font-size: 14px; font-weight: 500;">Espace réservé au rapport PowerBI (datad.pbix)</p>
+          <p style="color: #9ca3af; font-size: 12px; max-width: 400px; text-align: center;">Une fois publié sur PowerBI Service, insérez l'URL d'intégration ici pour afficher les visualisations interactives.</p>
         </div>
       </section>
     </div>
+
 
     <!-- Second Charts Row -->
     <div class="grid-2" style="margin-bottom: 24px;">

@@ -31,8 +31,8 @@ Chart.register(...registerables);
     </div>
 
     <!-- KPI Cards -->
-    <section class="grid-cards">
-      <article class="card" *ngFor="let kpi of kpis">
+    <section class="grid-cards animate-fade-in">
+      <article class="card glass-panel hover-lift" *ngFor="let kpi of kpis">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
           <span class="kpi-label">{{ kpi.label }}</span>
           <i-lucide [name]="kpi.trendUp ? TrendingUp : TrendingDown" [size]="18"
@@ -51,8 +51,8 @@ Chart.register(...registerables);
     </section>
 
     <!-- Charts Row -->
-    <div class="grid-2" style="margin-bottom: 24px;">
-      <section class="card">
+    <div class="grid-2 animate-fade-in" style="margin-bottom: 24px; animation-delay: 0.1s;">
+      <section class="card glass-panel hover-lift">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
           <div>
             <h3 style="font-size:16px;font-weight:700;color:var(--text-main);margin:0;">Prédiction Charge de Travail</h3>

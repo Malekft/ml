@@ -155,6 +155,15 @@ export class ApiService {
     return this.http.get<Record<string, unknown>>(`${this.baseUrl}/analytics/workload-prediction`);
   }
 
+  // --- Machine Learning (Flask via Spring Boot) ---
+  predictProximity(absenceData: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ml/predict-proximity`, absenceData);
+  }
+
+  detectSuspicious(absenceData: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ml/detect-suspicious`, absenceData);
+  }
+
   // --- Admin ---
   getAdminStats(): Observable<Record<string, unknown>> {
     return this.http.get<Record<string, unknown>>(`${this.baseUrl}/admin/stats`);

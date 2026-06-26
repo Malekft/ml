@@ -150,6 +150,7 @@ import {
             <th>Date Début</th>
             <th>Indicateur Temps</th>
             <th>Statut</th>
+            <th>Analyse IA</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -157,7 +158,7 @@ import {
           <tr *ngFor="let a of getFilteredAbsences()">
             <td>
               <div style="display:flex;align-items:center;gap:10px;">
-                <div class="avatar avatar-sm" [ngClass]="(a.email || a.employeNom) | avatarColor : a.avatar">
+                <div class="avatar avatar-sm hover-lift" [ngClass]="(a.email || a.employeNom) | avatarColor : a.avatar">
                   {{ a.employeNom | initials }}
                 </div>
                 <span style="font-weight:600;">{{ a.employeNom }}</span>
@@ -184,6 +185,11 @@ import {
               <span class="chip" [ngClass]="getStatusChipClass(a.statut)">
                 {{ getStatusLabel(a.statut) }}
               </span>
+            </td>
+            <td>
+              <button class="btn btn-secondary action-btn" style="border-radius: 20px; font-size: 11px; padding: 4px 10px;" title="Analyser la probabilité de récidive avec l'IA">
+                <i-lucide name="activity" [size]="14" color="var(--color-primary)"></i-lucide> Score IA
+              </button>
             </td>
             <td>
               <div style="display:flex;gap:6px;" *ngIf="a.statut === 'EN_ATTENTE'">
